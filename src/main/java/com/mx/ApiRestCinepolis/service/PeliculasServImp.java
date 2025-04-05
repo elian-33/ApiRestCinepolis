@@ -1,5 +1,6 @@
 package com.mx.ApiRestCinepolis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,57 @@ public class PeliculasServImp {
 			peliculasDao.deleteById(idPeli);
 		}
 		return bandera;
+	}
+	//Realizarlos con metodos que ya existen del dao y Desarrollando la logica
+		//Peticion post para buscar por nombre
+		//Peticion get pasando la informacion en la url para buscar por genero
+		//Peticion post para buscar por: nombre, precio, genero
+		//Peticion para eliminar por nombre
+	@Transactional
+	public Peliculas buscarXnombre(String nombre) {
+		List<Peliculas> listaPeliculas = peliculasDao.findAll();
+		for(Peliculas p: listaPeliculas) {
+			if(p.getNombre().equals(nombre)) {
+				return p;
+			}	
+				
+		}return null;
+
+	}
+	
+	@Transactional
+	public Peliculas buscarXgenero(String genero) {
+		List<Peliculas> listaPeliculas = peliculasDao.findAll();
+		for(Peliculas p: listaPeliculas) {
+			if(p.getGenero().equals(genero)) {
+				return p;
+			}
+		}return null;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Peliculas> buscar(Peliculas pelicula) {
+		List<Peliculas> listaPeliculasEnc = new ArrayList<>();
+		for(Peliculas p: peliculasDao.findAll()) {
+			if(p.getNombre().equals(pelicula.getNombre())) {
+				listaPeliculasEnc.add(p);
+			}else if(p.getPrecio().equals(pelicula.getPrecio())) {
+				listaPeliculasEnc.add(p);
+			}else if(p.getGenero().equals(pelicula.getGenero())) {
+				listaPeliculasEnc.add(p);
+			}
+		}return listaPeliculasEnc;
+	}
+	
+	@Transactional
+	public boolean eliminarXnombre(String nombre) {
+		Peliculas peliculaEnc = buscarXnombre(nombre);
+		boolean bandera = false;
+		if(peliculaEnc != null) {
+			bandera = true;
+			eliminar(peliculaEnc.getIdPelicula());
+		}return bandera;
+				
 	}
 
 }

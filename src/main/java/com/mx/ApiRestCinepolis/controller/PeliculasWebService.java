@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -64,5 +65,33 @@ public class PeliculasWebService {
 		else
 			return new ResponseEntity<>("Se elimino", HttpStatus.OK);
 	}
+	//http://localhost:9000/PeliculasWebService/buscarXnombre
+    @PostMapping(path = "buscarXnombre")
+    public Peliculas buscarXnombre(@RequestBody Peliculas pelicula) {
+    	if(pelicula.getNombre().equals(null)) {
+    		System.out.println("Ese registro no existe");
+    	}
+    	return peliculasServImp.buscarXnombre(pelicula.getNombre());
+    }
+    //http://localhost:9000/PeliculasWebService/burcarXgenero
+    @GetMapping(path = "burcarXgenero")
+    public Peliculas buscarXgenero(@RequestBody Peliculas pelicula) {
+    	return peliculasServImp.buscarXgenero(pelicula.getGenero());
+    }
+    //http://localhost:9000/PeliculasWebService/buscar
+    @PostMapping(path = "buscar")
+    public List<Peliculas> buscar(@RequestBody Peliculas pelicula) {
+    	return peliculasServImp.buscar(pelicula);
+    }
+  //http://localhost:9000/PeliculasWebService/eliminarXnombre
+    @DeleteMapping (path = "eliminarXnombre")
+    public ResponseEntity<String> eliminarXnombre(@RequestBody Peliculas pelicula){
+    	boolean response = peliculasServImp.eliminarXnombre(pelicula.getNombre());
+    	if (response) {
+    		return new ResponseEntity<>("Pelicula eliminada", HttpStatus.OK);
+    	}else {
+    		return new ResponseEntity<>("No existe registro", HttpStatus.BAD_REQUEST);
+    	}
+    }
 
 }
